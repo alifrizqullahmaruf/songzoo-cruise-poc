@@ -1,37 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SongZoo Cruise — PWA Proof of Concept
 
-## Getting Started
+A mobile-first Progressive Web App that turns a cruise holiday into a personalised song. Built as a POC for the **Icon of the Seas** activation.
 
-First, run the development server:
+---
+
+## What it does
+
+1. **Song Setup** — guests fill in 7 steps (song title, artist style, humour, profanity, names, email, booking ref)
+2. **Daily Highlights** — record a voice note each day; transcribed via OpenAI Whisper
+3. **Song Delivery** — a summary email is sent via Resend when all highlights are captured
+4. **Survey** — 3-step feedback form (ratings, amenities, suggestions)
+
+All state lives in `localStorage` via Zustand. No database, no auth.
+
+---
+
+## Tech stack
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| UI | React 19 + Tailwind CSS v4 |
+| State | Zustand 5 + persist middleware |
+| Transcription | OpenAI Whisper API |
+| Email | Resend |
+| Type | PWA (standalone, portrait) |
+
+---
+
+## Getting started
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Set environment variables
+
+Copy and fill in your keys:
+
+```bash
+cp .env.local.example .env.local
+```
+
+```env
+OPENAI_API_KEY=sk-...
+RESEND_API_KEY=re_...
+DEMO_EMAIL_FROM=SongZoo Cruise <onboarding@resend.dev>
+DEMO_EMAIL_TO=you@example.com
+```
+
+### 3. Run dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+app/
+  page.tsx              # Landing
+  home/                 # State-machine hub
+  song-setup/           # 7-step setup flow
+  notifications/        # Permission simulation
+  daily-highlight/      # Hub + day-1/2/3 recording pages
+  completed/            # Sends demo email
+  survey/               # Rating, amenities, suggestion
+  thank-you/            # Resets state
+  api/
+    transcribe/         # POST → OpenAI Whisper
+    send-email/         # POST → Resend
+lib/
+  store.ts              # Zustand store
+  validation.ts         # Step gate helpers
+  transcribe-client.ts  # Client-side fetch wrapper
+  email-client.ts       # Client-side fetch wrapper
+  email-template.ts     # HTML email builder
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# songzoo-cruise-poc
+- `.env.local` is gitignored — never commit API keys
+- PWA icons in `public/` are placeholder solid-colour PNGs; replace with real artwork before any public demo
+- No real push notifications — the permission screen is a UI simulation only
