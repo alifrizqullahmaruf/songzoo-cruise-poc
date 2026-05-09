@@ -3,9 +3,8 @@ import { Resend } from "resend";
 import { buildDemoEmailHtml } from "@/lib/email-template";
 import type { AppState } from "@/types/app-state";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   let state: AppState;
   try {
     state = (await request.json()) as AppState;
