@@ -1,5 +1,5 @@
-import { StubPage } from "@/components/StubPage";
+import { DayRecordPage } from "@/app/daily-highlight/_components/DayRecordPage";
 
 export default function DailyHighlightDay2Page() {
-  return <StubPage title="Day 2" route="/daily-highlight/day-2" />;
+  return <DayRecordPage day="day2" dayLabel="Day 2 Highlight" />;
 }
